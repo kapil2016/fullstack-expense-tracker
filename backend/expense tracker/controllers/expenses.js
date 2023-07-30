@@ -1,7 +1,8 @@
 const Expense = require('../modal/expense')
 
 exports.getAllExpenses = (req, res, next) => {
-    Expense.findAll().then(expenses => {
+    const user = req.user ;
+    user.getExpenses().then(expenses => {
         res.json(expenses);
     }).catch(err => {
         res.json(err);
@@ -9,9 +10,12 @@ exports.getAllExpenses = (req, res, next) => {
 }
 
 exports.createNewExpense = (req, res, next) => {
-    console.log(req.body)
+    console.log(req.body , 'this is req')
+
+    const user = req.user ;
+
     const { title, amount, date, category } = req.body;
-    Expense.create({
+    user.createExpense({
         date: date,
         title: title,
         amount: amount,

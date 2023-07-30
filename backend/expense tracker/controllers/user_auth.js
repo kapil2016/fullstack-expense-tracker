@@ -1,6 +1,7 @@
 const User = require('../modal/user')
 const encriptPassword = require('../utility/helper-functions/encript-password');
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt');
+const idToken = require('../utility/helper-functions/genrate-idToken')
 
 exports.login = async (req, res, next) => {
     const { email, password } = req.body.data;
@@ -16,7 +17,7 @@ exports.login = async (req, res, next) => {
         const match = await bcrypt.compare(password, user.password);
 
         if (match) {
-            res.status(200).json({ message: 'Login successful' });
+            res.status(200).json({ message: 'Login successful' , registerd:true , idToken:idToken.genrateToken({userId:user.id})});
         } else {
             res.status(401).json({ message: 'Invalid credentials' });
         }
