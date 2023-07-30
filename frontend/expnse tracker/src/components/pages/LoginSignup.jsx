@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import styles from "./LoginSignup.module.css";
 import axios from "axios";
+import { useNavigate } from "react-router";
 
 function loginSignupHandler(login, details) {
   let url = "http://localhost:3000/login";
@@ -17,6 +18,7 @@ function SignupForm(props) {
   const emailRef = useRef();
   const passwordRef = useRef();
   const confirmPasswordRef = useRef();
+  const navTo = useNavigate()
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -26,7 +28,6 @@ function SignupForm(props) {
       const confirmPassword = confirmPasswordRef.current.value;
       if (!isLogIn && password !== confirmPassword) {
         alert("password missmatch");
-        return;
       }
     }
 
@@ -38,7 +39,8 @@ function SignupForm(props) {
       .then((res) => {
         console.log(res);
         if(res.data.registerd){
-          alert('user login succesfully')
+          console.log('login successful')
+          return navTo('/home')
         }
         setIsLogin(true);
       })

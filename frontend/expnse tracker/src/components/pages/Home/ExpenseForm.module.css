@@ -1,0 +1,66 @@
+.card {
+    display: flex;
+    border: 1px solid #ccc;
+    padding: 5px;
+    /* margin:auto; */
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-size: larger;
+    width: 40vw;
+    /* margin-top: 2rem; */
+    margin: 0.5rem;
+    height: 100%;
+  }
+  
+  .formGroup {
+    margin-bottom: 1rem;
+    width: 100%;
+  }
+  
+  label {
+    display: block;
+    /* margin-bottom: 5px; */
+    font-weight: bold;
+  }
+  
+ .formGroup input,
+  select {
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+    font-size: medium;
+    width: 100%;
+  }
+  
+  .form button {
+    background-color: #007bff;
+    border: none;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 97%;
+    margin: 0.5rem;
+  }
+  
+  button:hover {
+    background-color: #0069d9;
+  }
+  h6 {
+     margin: 0;
+     padding: 0;
+  }
+  .dark {
+    background-color: #333333;
+    color: #ffffff;
+  }
+  .form{
+    width: 70%;
+  }
+  
