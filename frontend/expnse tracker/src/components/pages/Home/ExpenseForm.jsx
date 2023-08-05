@@ -5,7 +5,7 @@ import { addNewExpense } from "../../../states/reducers/expense-reducer";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 
-const categories = ["patrol", "food", "bills payments", "other expense"];
+const categories = ["fule", "food", "bills", "other"];
 
 async function addExpense(data, idToken) {
   const response = await axios(`http://localhost:3000/expenses/`, {
@@ -45,7 +45,7 @@ const ExpenseForm = (props) => {
         titleRef.current.value = "";
         amountRef.current.value = "";
         dateRef.current.value = "";
-        categoryRef.current.value = "";
+        categoryRef.current.value = "other";
       })
       .catch((err) => {
         console.log(err);

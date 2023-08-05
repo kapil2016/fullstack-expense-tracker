@@ -5,16 +5,37 @@ import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
 import { useSelector } from "react-redux";
 import PremiumComponent from "../BuyPremium";
+import {useEffect , useState} from 'react' ;
+import axios from "axios";
 
-const expensesData = [
-  { username: "John Doe", totalExpense: "$500" },
-  { username: "Jane Smith", totalExpense: "$750" },
-  { username: "Alice Johnson", totalExpense: "$300" },
-  // Add more data as needed
-];
+
+async function fetchLeaderboard(idToken) {
+  const response = await axios.get(
+    `http://localhost:3000/leaderboard/`,{
+        headers:{
+            Authorization:idToken,
+        }
+    }
+  );
+  const expenses = response.data;
+  return expenses;
+}
+
+
 
 const LeaderBoardList = () => {
+  const [expensesData , setExpensesData] = useState([])
   const isPremium = useSelector((state) => state.auth.isPremium);
+  const idToken = useSelector((state) => state.auth.idToken);
+
+  useEffect(()=>{
+    if(isPremium){
+      fetchLeaderboard(idToken).then(expenses=>{
+        console.log(expenses);
+        setExpensesData(expenses)
+      })
+    }
+  },[isPremium])
 
   return (
     <div>
@@ -25,10 +46,10 @@ const LeaderBoardList = () => {
           {expensesData.map((expense, index) => (
             <ListItem key={index} sx={{backgroundColor:'#f5f5f5',marginBottom:'0.5rem',boxShadow:'2px 2px 5px rgba(0, 0, 0, 0.3)',borderRadius:'5px'}}>
               <ListItemText
-                primary={expense.username}
+                primary={expense.email}
                 secondary={
                   <Typography variant="body2" color="textSecondary">
-                    Total Expense: {expense.totalExpense}
+                    Total Expense: {expense.totalamount}
                   </Typography>
                 }
               />

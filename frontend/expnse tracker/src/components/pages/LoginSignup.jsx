@@ -51,6 +51,7 @@ function SignupForm(props) {
         if(res.data.registerd){
           console.log('login successful');
           localStorage.setItem('idToken',res.data.idToken)
+          localStorage.setItem('isPremium' ,res.data.isPremium )
           dispatch(setIdToken(res.data.idToken))
           dispatch(setPremium(res.data.isPremium))
           return navTo('/home')
