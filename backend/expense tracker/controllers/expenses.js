@@ -1,7 +1,7 @@
 const Expense = require('../modal/expense')
 
 exports.getAllExpenses = (req, res, next) => {
-    const user = req.user ;
+    const user = req.user;
     user.getExpenses().then(expenses => {
         res.json(expenses);
     }).catch(err => {
@@ -9,49 +9,69 @@ exports.getAllExpenses = (req, res, next) => {
     })
 }
 
-exports.createNewExpense = (req, res, next) => {
-    console.log(req.body , 'this is req')
-
-    const user = req.user ;
-
+exports.createNewExpense = async (req, res, next) => {
+    console.log(req.body, 'this is req')
+    const user = req.user;
     const { title, amount, date, category } = req.body;
-    user.createExpense({
-        date: date,
-        title: title,
-        amount: amount,
-        category: category
-    }).then(result => {
+    try {
+        const result = await user.createExpense({
+            date: date,
+            title: title,
+            amount: amount,
+            category: category
+        })
+        if (!user.totalamount) {
+            user.totalamount = Number(amount);
+            const cat = category;
+            user[cat] = Number(amount);
+        } else {
+            user.totalamount = Number(user.totalamount) + Number(amount)
+            const cat = category;
+            user[cat] = Number(user[cat]) + Number(amount);
+        }
+        await user.save();
         res.json(result)
-    }).catch(err => {
-        res.json(err)
-    })
-
+    } catch (error) {
+        res.status(500).json(err)
+    }
 }
 
-exports.updateExpense = (req, res, next) => {
+exports.updateExpense = async (req, res, next) => {
     const id = req.params.id
+    const user = req.user;
     const updatedDetails = req.body;
-    Expense.findByPk(id).then(expense => {
+    try {
+        const expense = await Expense.findByPk(id);
+        user.totalamount = Number(user.totalamount) - Number(expense.amount) + Number(updatedDetails.amount);
+        const cat = updatedDetails.category;
+        user[cat] = Number(user[cat]) - Number(expense.amount) + Number(updatedDetails.amount);
+        await user.save();
         expense.title = updatedDetails.title;
         expense.amount = updatedDetails.amount;
         expense.date = updatedDetails.date;
         expense.category = updatedDetails.category;
-        expense.save().then(result => {
-            res.json(result)
-        }).catch(err => {
-            res.json(err)
-        })
-    })
+        const result = await expense.save();
+        res.json(result)
+    } catch (error) {
+        res.status(500).json(error)
+    }
+
 }
 
-exports.deleteExpense = (req, res, next) => {
+exports.deleteExpense = async (req, res, next) => {
+
     const id = req.params.id;
-    Expense.findByPk(id).then(expense => {
-        expense.destroy().then(result => {
-            res.json(result)
-        }).catch(err => {
-            res.json(err)
-        })
-    })
+    const user = req.user;
+    try {
+        const expense = await Expense.findByPk(id);
+        const cat = expense.category;
+        user[cat] = Number(user[cat]) - Number(expense.amount);
+        user.totalamount = Number(user.totalamount) - Number(expense.amount)
+        await user.save();
+        await expense.destroy();
+        res.json({})
+    } catch (error) {
+        res.status(404).json(error)
+    }
 }
 

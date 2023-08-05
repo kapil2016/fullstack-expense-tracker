@@ -17,7 +17,7 @@ exports.login = async (req, res, next) => {
         const match = await bcrypt.compare(password, user.password);
 
         if (match) {
-            res.status(200).json({ message: 'Login successful' , registerd:true , idToken:idToken.genrateToken({userId:user.id})});
+            res.status(200).json({ message: 'Login successful' , registerd:true , idToken:idToken.genrateToken({userId:user.id}) , isPremium:user.ispremium});
         } else {
             res.status(401).json({ message: 'Invalid credentials' });
         }
@@ -34,7 +34,7 @@ exports.signUp = async (req, res, next) => {
             res.status(409).json({ error: 'user already exist' })
         } else {
             const encriptedPassword = await encriptPassword.encript(password)
-            await User.create({ email: email, password: encriptedPassword })
+            await User.create({ email: email, password: encriptedPassword , isPremium:false })
             res.status(200).json({message:'user register successfully'});
         }
     } catch (err) {
