@@ -1,16 +1,33 @@
 import React, { useRef, useState } from "react";
 import styles from "./ExpenseForm.module.css";
 import { FaAngleDown, FaAngleRight } from "react-icons/fa";
-import { useSelector } from "react-redux";
+import { addNewExpense } from "../../../states/reducers/expense-reducer";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
 
 const categories = ["patrol", "food", "bills payments", "other expense"];
+
+async function addExpense(data, idToken) {
+  const response = await axios(`http://localhost:3000/expenses/`, {
+    method: "POST",
+    data: data,
+    headers: {
+      Authorization: idToken,
+    },
+  });
+  const expense = response.data;
+  // console.log(expense);
+  return expense;
+}
 
 const ExpenseForm = (props) => {
   const amountRef = useRef();
   const titleRef = useRef();
   const dateRef = useRef();
   const categoryRef = useRef();
+  const dispatch = useDispatch();
   const [expanded, setExpanded] = useState(false);
+  const idToken = useSelector((state) => state.auth.idToken);
   const isDarkMode = false;
 
   const handleSubmit = (event) => {
@@ -22,12 +39,17 @@ const ExpenseForm = (props) => {
       date: dateRef.current.value,
       category: categoryRef.current.value,
     };
-
-    props.onSubmit(details);
-    titleRef.current.value = "";
-    amountRef.current.value = "";
-    dateRef.current.value = "";
-    categoryRef.current.value = "";
+    addExpense(details, idToken)
+      .then((res) => {
+        dispatch(addNewExpense(res));
+        titleRef.current.value = "";
+        amountRef.current.value = "";
+        dateRef.current.value = "";
+        categoryRef.current.value = "";
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (

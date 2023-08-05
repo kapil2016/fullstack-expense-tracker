@@ -1,12 +1,43 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { FaPencilAlt, FaTrashAlt ,FaSave } from 'react-icons/fa';
 import styles from './ExpenseCard.module.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { editExpense,deleteExpense } from '../../../../states/reducers/expense-reducer';
+import axios from 'axios';
 
 const categories = ["patrol", "food", "bills payments", "other expense"];
+async function deleteExpenseById(id,idToken) {
+  const response = await axios(`http://localhost:3000/expenses/${id}`, {
+    method: "DELETE",
+    headers:{
+        Authorization:idToken
+    }
+  });
+  const res = response.data;
+  console.log(res);
+  return res;
+}
 
-function ExpenseCard({ day, month, year, description: title, amount, id , date , onEdit , category,onDelete}) {
+async function editExpenseById(id, details,idToken) {
+  const response = await axios(`http://localhost:3000/expenses/${id}`, {
+    method: "PUT",
+    data: details,
+    headers:{
+        Authorization:idToken
+    }
+  });
+  const expense = response.data;
+  console.log(expense);
+  return expense;
+}
+
+
+
+function ExpenseCard({ day, month, year, description: title, amount, id , date , category,}) {
 
   const[editCard ,setEditCard] = useState(false);
+  const idToken = useSelector(state=>state.auth.idToken)
+  const dispatch = useDispatch();
   const isDarkMode = false
   const editDate = useRef();
   const editDescription = useRef();
@@ -27,16 +58,27 @@ function ExpenseCard({ day, month, year, description: title, amount, id , date ,
     setEditCard(pre=>!pre);
     if(editCard){
       const editedData = {amount:editAmount.current.value , title : editDescription.current.value , date:editDate.current.value , category:editCategory.current.value}  ;
-
-      onEdit(id,editedData)
+      editExpenseById(id, editedData,idToken)
+      .then((res) => {
+        dispatch(editExpense({id:id , details:res}));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     }
-
 
   }
   const deleteExpenseHandler =()=>{
-    onDelete(id)
+    deleteExpenseById(id,idToken)
+    .then(() => {
+      dispatch(deleteExpense(id))
+    })
+    .catch((err) => {
+      console.log(err);
+    });
   }
   return (
+    <>
     <div className={[styles.card, isDarkMode ? styles.dark : ''].join(' ')} >
       <div className={styles.date}>
         {!editCard?
@@ -81,6 +123,7 @@ function ExpenseCard({ day, month, year, description: title, amount, id , date ,
         </button>
       </div>
     </div>
+    </>
   );
 }
 

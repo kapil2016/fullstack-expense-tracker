@@ -1,17 +1,20 @@
-import React from 'react';
-import ExpenseCard from './ExpenseCard';
+import React from "react";
+import ExpenseCard from "./ExpenseCard";
+import { useSelector } from "react-redux";
 
+const ExpenseList = () => {
+  const expenses = useSelector((state) => state.expense.expenseList);
 
-const ExpenseList = (props) => {
-    const expenses =props.data ;
-    const ExpensesList =[];
-    for(let item of expenses){
+  return (
+    <>
+      {expenses.map((item) => {
         const date = new Date(item.date);
-        const day = date.getDate()
-        const month = date.toLocaleString('en-US', { month: 'long' });
+        const day = date.getDate();
+        const month = date.toLocaleString("en-US", { month: "long" });
         const year = date.getFullYear();
-        ExpensesList.push( <ExpenseCard
-            id = {item.id}
+        return (
+          <ExpenseCard
+            id={item.id}
             date={item.date}
             key={item.id}
             description={item.title}
@@ -19,15 +22,11 @@ const ExpenseList = (props) => {
             day={day}
             month={month}
             year={year}
-            onEdit={props.onEdit}
             category={item.category}
-            onDelete={props.onDelete}
-          />)
-    }
-  return (
-    <div style={{width:'60vw'}}>
-        {ExpensesList}
-    </div>
+          />
+        );
+      })}
+    </>
   );
 };
 

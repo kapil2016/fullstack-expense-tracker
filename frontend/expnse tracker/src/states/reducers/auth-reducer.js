@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 const useridToken = localStorage.getItem("idToken")
 
-const initialState = {isLoggedIn:!!useridToken , idToken:useridToken, userID : null, isEmailVerified : false}
+const initialState = {isLoggedIn:!!useridToken , idToken:useridToken, userID : null, isPremium : false}
 const authSlice = createSlice({
     name:'auth' ,
     initialState ,
@@ -15,13 +15,13 @@ const authSlice = createSlice({
         setUserID(state , action){
             state.userID = action.payload ;
         },
-        setEmailVerified(state,action){
-            state.isEmailVerified = action.payload;
+        setPremium(state,action){
+            state.isPremium = action.payload;
         }
 
     }
 })
 
 const authReducer = authSlice.reducer ;
-export const {setLogin,setIdToken,setUserID,setEmailVerified} = authSlice.actions;
+export const {setLogin,setIdToken,setUserID,setPremium} = authSlice.actions;
 export default authReducer ;

@@ -1,7 +1,10 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState , useEffect} from "react";
 import styles from "./LoginSignup.module.css";
 import axios from "axios";
 import { useNavigate } from "react-router";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { setIdToken, setPremium } from "../../states/reducers/auth-reducer";
 
 function loginSignupHandler(login, details) {
   let url = "http://localhost:3000/login";
@@ -18,7 +21,15 @@ function SignupForm(props) {
   const emailRef = useRef();
   const passwordRef = useRef();
   const confirmPasswordRef = useRef();
+  const idToken = useSelector(state=>state.auth.idToken) ;
   const navTo = useNavigate()
+  const dispatch = useDispatch()
+
+  useEffect(()=>{
+    if(idToken){
+      navTo('/home')
+    }
+  },[idToken])
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -30,7 +41,6 @@ function SignupForm(props) {
         alert("password missmatch");
       }
     }
-
     const details = {
       email: email,
       password: password,
@@ -39,7 +49,10 @@ function SignupForm(props) {
       .then((res) => {
         console.log(res);
         if(res.data.registerd){
-          console.log('login successful')
+          console.log('login successful');
+          localStorage.setItem('idToken',res.data.idToken)
+          dispatch(setIdToken(res.data.idToken))
+          dispatch(setPremium(res.data.isPremium))
           return navTo('/home')
         }
         setIsLogin(true);
