@@ -2,6 +2,7 @@ const Express = require('express')
 const sequelize = require('./database/database')
 const User = require('./modal/user')
 const Order = require('./modal/order')
+const PasswordResetRequest = require('./modal/password-reset')
 const expensesRoutes = require('./routes/expenses')
 const authRoutes = require('./routes/user_auth')
 const paymentRoutes = require('./routes/payment')
@@ -24,13 +25,14 @@ app.use(passwordRoutes)
 
 User.hasMany(Expense)
 User.hasMany(Order);
+User.hasMany(PasswordResetRequest)
+PasswordResetRequest.belongsTo(User)
 Order.belongsTo(User)
 Expense.belongsTo(User)
 
 sequelize.sync().then(result => {
     app.listen(3000)
 }).catch(err => console.log(err))
-
 
 
 
