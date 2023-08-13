@@ -6,6 +6,7 @@ const expensesRoutes = require('./routes/expenses')
 const authRoutes = require('./routes/user_auth')
 const paymentRoutes = require('./routes/payment')
 const premiumRoutes = require('./routes/premium')
+const passwordRoutes = require('./routes/forgot_password')
 const path = require('path');
 const publicPath = path.join(__dirname, 'public');
 const cors = require('cors');
@@ -19,6 +20,7 @@ app.use('/expenses', expensesRoutes);
 app.use(authRoutes)
 app.use(paymentRoutes)
 app.use(premiumRoutes)
+app.use(passwordRoutes)
 
 User.hasMany(Expense)
 User.hasMany(Order);
