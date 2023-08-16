@@ -4,6 +4,7 @@ import { FaAngleDown, FaAngleRight } from "react-icons/fa";
 import { addNewExpense } from "../../../states/reducers/expense-reducer";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
+import { setAlertMessage, setAlertType, setAlertVisibility } from "../../../states/reducers/alert-reducer";
 
 const categories = ["fule", "food", "bills", "other"];
 
@@ -26,7 +27,7 @@ const ExpenseForm = (props) => {
   const dateRef = useRef();
   const categoryRef = useRef();
   const dispatch = useDispatch();
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(true);
   const idToken = useSelector((state) => state.auth.idToken);
   const isDarkMode = false;
 
@@ -42,12 +43,18 @@ const ExpenseForm = (props) => {
     addExpense(details, idToken)
       .then((res) => {
         dispatch(addNewExpense(res));
+        dispatch(setAlertVisibility(true))
+        dispatch(setAlertMessage("expense added successfully"))
+        dispatch(setAlertType("success"))
         titleRef.current.value = "";
         amountRef.current.value = "";
         dateRef.current.value = "";
         categoryRef.current.value = "other";
       })
       .catch((err) => {
+        dispatch(setAlertVisibility(true))
+        dispatch(setAlertMessage("somthing went wrong"))
+        dispatch(setAlertType("error"))
         console.log(err);
       });
   };

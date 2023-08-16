@@ -5,12 +5,12 @@ import { useTheme } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { Wallet , Leaderboard , PieChart } from '@mui/icons-material';
+import { Wallet , Leaderboard , PieChart ,Assignment } from '@mui/icons-material';
 import LeaderBoardList from './LeaderBoard';
 import PieRechartComponent from './CompareExpense';
 import ExpenseTab from './ExpenseTab';
+import StickyHeadTable from './ReportTable';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -72,6 +72,7 @@ export default function FullWidthTabs() {
           <Tab icon={<Wallet/>} label="Expenses" {...a11yProps(0)} />
           <Tab icon={<Leaderboard/>} label="Leaderboard" {...a11yProps(1)} />
           <Tab icon={<PieChart/>} label="Compare Expenses" {...a11yProps(2)} />
+          <Tab icon={<Assignment/>} label="Expenses Report" {...a11yProps(3)} />
         </Tabs>
       </AppBar>
       <SwipeableViews
@@ -87,6 +88,9 @@ export default function FullWidthTabs() {
         </TabPanel>
         <TabPanel value={value} index={2} dir={theme.direction}>
           <PieRechartComponent></PieRechartComponent>
+        </TabPanel>
+        <TabPanel value={value} index={3} dir={theme.direction}>
+          <StickyHeadTable></StickyHeadTable>
         </TabPanel>
       </SwipeableViews>
     </Box>

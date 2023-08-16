@@ -38,7 +38,7 @@ const LeaderBoardList = () => {
   },[isPremium])
 
   return (
-    <div>
+    <div style={{height:'68vh', overflow:"auto"}}>
       {!isPremium ? (
         <PremiumComponent />
       ) : (
