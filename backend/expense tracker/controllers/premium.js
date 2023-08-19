@@ -1,4 +1,5 @@
 const User = require('../modal/user')
+const s3 = require('../services/uploadtos3')
 exports.getLeaderBoard = async (req, res, next) => {
     const user = req.user;
     try {
@@ -30,3 +31,36 @@ exports.getCategory = async (req, res, next) => {
         res.status(500).json(error)
     }
 }
+
+exports.getExpenseReport = async (req, res, next) => {
+    const user = req.user;
+    try {
+        if (!user.ispremium) {
+            throw new Error('bad request user is not premium')
+        }
+        const expenses = await user.getExpenses();
+        const stringfyedExpenses = JSON.stringify(expenses);
+        const filename = `expenses/${user.id}/expense${Date.now()}.txt`
+        const url = await s3.uploadToS3(filename, stringfyedExpenses)
+        await user.createDownload({ name: `expense-${Date.now()}`, url: url , date: `${new Date()}`})
+        res.json({ url, success: true })
+
+    } catch (error) {
+        res.status(500).json(error)
+    }
+}
+
+exports.getDownloads = async (req,res,next)=>{
+    const user = req.user;
+    try {
+        if (!user.ispremium) {
+            throw new Error('bad request user is not premium')
+        }
+        const downloads = await user.getDownloads()
+        res.json(downloads)
+    } catch (error) {
+        res.status(500).json(error)
+    }
+
+}
+

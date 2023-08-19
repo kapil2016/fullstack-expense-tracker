@@ -5,6 +5,7 @@ import ForgotPassword from "./components/pages/ForgotPassword"
 import ResetPassword from "./components/pages/ResetPassword"
 import CustomizedSnackbars from "./components/Alert"
 import { Routes , Route } from "react-router"
+import StickyHeadTable from "./components/tabs/ReportTable"
 function App() {
 
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/home" element={<HomePage/>} ></Route>
         <Route path="/forgot-password" element={<ForgotPassword/>} ></Route>
         <Route path="/reset-password/:uuid" element={<ResetPassword/>} ></Route>
+        <Route path="/print-report/:print" element={<StickyHeadTable/>} ></Route>
       </Routes>
     </div>
     </>

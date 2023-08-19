@@ -3,6 +3,7 @@ require('dotenv').config() ;
 const sequelize = require('./database/database')
 const User = require('./modal/user')
 const Order = require('./modal/order')
+const Download = require('./modal/download')
 const PasswordResetRequest = require('./modal/password-reset')
 const expensesRoutes = require('./routes/expenses')
 const authRoutes = require('./routes/user_auth')
@@ -30,10 +31,13 @@ User.hasMany(PasswordResetRequest)
 PasswordResetRequest.belongsTo(User)
 Order.belongsTo(User)
 Expense.belongsTo(User)
+Download.belongsTo(User)
+User.hasMany(Download)
 
 sequelize.sync().then(result => {
     app.listen(3000)
 }).catch(err => console.log(err))
+
 
 
 

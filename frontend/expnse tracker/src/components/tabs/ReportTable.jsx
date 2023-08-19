@@ -10,6 +10,8 @@ import TableRow from '@mui/material/TableRow';
 import { useSelector } from 'react-redux';
 import PremiumComponent from '../BuyPremium';
 import OpenIconSpeedDial from '../DownloadButton';
+import { useParams } from 'react-router';
+import { useEffect } from 'react';
 
 const columns = [
   {
@@ -47,6 +49,8 @@ export default function StickyHeadTable() {
   const [page, setPage] = React.useState(0);
   const isPremium = useSelector((state) => state.auth.isPremium);
   const rows = useSelector(state=>state.expense.expenseList)
+  const params = useParams()
+  const print = params.print ;
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const handleChangePage = (event, newPage) => {
@@ -57,6 +61,11 @@ export default function StickyHeadTable() {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+
+  useEffect(()=>{
+    if(print)
+    window.print();
+  },[print])
 
   return (
     <div style={{display:'flex'}}>
@@ -109,7 +118,7 @@ export default function StickyHeadTable() {
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
     </Paper>}
-    {isPremium && <OpenIconSpeedDial></OpenIconSpeedDial>}
+    {(isPremium && !print) && <OpenIconSpeedDial></OpenIconSpeedDial>}
     </div>
   );
 }
