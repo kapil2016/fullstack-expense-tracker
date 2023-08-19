@@ -1,9 +1,8 @@
 const Razorpay = require('razorpay');
-const getPaymentStatus = require('../utility/helper-functions/payment-status')
 const Order = require('../modal/order')
 const razorpay = new Razorpay({
-  key_id: 'rzp_test_8r8KzW3gOUvR8E',
-  key_secret: 'MtjSDzFskBAt8s8LjjmkG7Qp',
+  key_id: process.env.RAZORPAY_API_KEY,
+  key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
 exports.createOrder = async (req, res, next) => {
@@ -45,14 +44,6 @@ exports.verfyPayment = async (req, res,next) => {
     //  Object.assign(order, {status:'paid' , payment_id:razorpay_payment_id}); // Merge the updatedData into the order object
      await order.save(); // Save the updated order to the database
      res.json({ message: 'Payment successful' , isPremium:req.user.ispremium })
-
-    // const paymentstatus = await getPaymentStatus(razorpay_order_id)
-    // if (paymentstatus === 'paid') {
-    //   res.json({ message: 'Payment successful' });
-    // } else {
-    //   res.json({ message: 'somthing went wrong', status: paymentstatus });
-    // }
-
   } catch (error) {
     console.error('Error verifying payment:', error);
     res.status(500).json({ error: 'Failed to verify payment' });

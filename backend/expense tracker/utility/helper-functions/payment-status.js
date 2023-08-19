@@ -1,13 +1,12 @@
-const axios = require('axios');
 const Razorpay = require('razorpay')
 
-const razorpayApiKey = 'rzp_test_8r8KzW3gOUvR8E';
-const keySecret = 'MtjSDzFskBAt8s8LjjmkG7Qp'
+const RAZORPAY_API_KEY = process.env.RAZORPAY_API_KEY
+const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET
 
 
 const getPaymentStatus = async (orderId) => {
   try {
-    var instance = new Razorpay({ key_id: razorpayApiKey, key_secret: keySecret})
+    var instance = new Razorpay({ key_id: RAZORPAY_API_KEY, key_secret: RAZORPAY_KEY_SECRET})
     const response = await instance.orders.fetch(orderId)
     return response.status ;
   } catch (error) {

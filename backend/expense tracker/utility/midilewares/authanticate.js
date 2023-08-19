@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../../modal/user')
-const secretKey = 'uskdkljakakjadkljaliwjodsjlajd11123nskasdk'
+const secretKey = process.env.JWT_SECRET_KEY
 
 exports.authanticate = (req, res, next) => {
     const idToken = req.headers['authorization']

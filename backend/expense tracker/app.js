@@ -1,4 +1,5 @@
 const Express = require('express')
+require('dotenv').config() ;
 const sequelize = require('./database/database')
 const User = require('./modal/user')
 const Order = require('./modal/order')
