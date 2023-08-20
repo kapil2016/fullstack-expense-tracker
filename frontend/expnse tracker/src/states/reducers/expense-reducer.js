@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {expenseList :[]}
+const initialState = {expenseList :[] , maxPagesCount:0 , curruntPage:1}
 const expenseSlice = createSlice({
     name:'expense' ,
     initialState ,
@@ -18,6 +18,12 @@ const expenseSlice = createSlice({
         editExpense(state , action){
             const index = state.expenseList.findIndex(item=>item.id === action.payload.id);
             state.expenseList[index] = action.payload.details ;
+        },
+        setMaxPagesCount(state , action){
+            state.maxPagesCount = action.payload ;
+        },
+        setCurrentPage(state , action){
+            state.curruntPage = action.payload ;
         }
 
     }

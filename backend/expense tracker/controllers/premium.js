@@ -1,16 +1,23 @@
 const User = require('../modal/user')
 const s3 = require('../services/uploadtos3')
+const Download = require('../modal/download')
 exports.getLeaderBoard = async (req, res, next) => {
     const user = req.user;
+    const page = +req.query.page || 1 ;
+    const size = +req.query.size || 10 ;
+   
     try {
         if (!user.ispremium) {
             throw new Error('bad request user is not premium')
         }
+        const count = await User.count();
         const users = await User.findAll({
             attributes: ['email', 'totalamount'],
+            offset:(page-1)*size,
+            limit:size
         });
         const sortedUsers = users.sort((b, a) => a.totalamount - b.totalamount);
-        res.json(sortedUsers);
+        res.json({users:sortedUsers , maxPageCount:Math.ceil(count/size) , count});
 
     } catch (error) {
         res.status(500).json(error)
@@ -52,12 +59,15 @@ exports.getExpenseReport = async (req, res, next) => {
 
 exports.getDownloads = async (req,res,next)=>{
     const user = req.user;
+    const page = +req.query.page || 1 ;
+    const size = +req.query.size || 10 ;
     try {
         if (!user.ispremium) {
             throw new Error('bad request user is not premium')
         }
-        const downloads = await user.getDownloads()
-        res.json(downloads)
+        const count = await Download.count({where:{userid:user.id}}) ;
+        const downloads = await user.getDownloads({offset:(page-1)*size , limit:size })
+        res.json({downloads , maxPageCount:Math.ceil(count/size) , count})
     } catch (error) {
         res.status(500).json(error)
     }

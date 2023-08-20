@@ -1,14 +1,20 @@
 const Expense = require('../modal/expense');
 const sequelize = require('../database/database') ;
 
-
-exports.getAllExpenses = (req, res, next) => {
+exports.getAllExpenses = async(req, res, next) => {
     const user = req.user;
-    user.getExpenses().then(expenses => {
-        res.json(expenses);
-    }).catch(err => {
-        res.json(err);
-    })
+    const page = +req.query.page || 1 ;
+    const size = +req.query.size || 3 ;
+    try{
+        const count = await Expense.count({where:{userid:user.id}})
+        console.log(page , size , count)
+        const expenses = await user.getExpenses({offset:(page-1)*size , limit:size})
+        console.log(page , size , count , expenses)
+        res.json({expenses , maxPageCount:Math.ceil(count/size) , count})
+
+    }catch(err){
+        res.status(500).json(err)
+    }
 }
 
 exports.createNewExpense = async (req, res, next) => {

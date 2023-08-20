@@ -51,7 +51,7 @@ export default function StickyHeadTable() {
   const rows = useSelector(state=>state.expense.expenseList)
   const params = useParams()
   const print = params.print ;
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(print?20:10);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -67,11 +67,13 @@ export default function StickyHeadTable() {
     window.print();
   },[print])
 
+  const maxHight = print ? 1000 : 350
+
   return (
     <div style={{display:'flex'}}>
        
         {!isPremium ? <PremiumComponent/> : <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-      <TableContainer sx={{ maxHeight: 370 }}>
+      <TableContainer sx={{ maxHeight: maxHight }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
